@@ -4,7 +4,8 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>StockSite</Name>
     <RootNamespace>StockSite</RootNamespace>
-    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>
+    </InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -107,25 +108,14 @@
     <Content Include="app\templates\app\login.html" />
     <Content Include="app\templates\app\loginpartial.html" />
     <Content Include="robinhood\templates\index.html" />
-    <Content Include="robinhood\templates\robinhood\registration_error.html" />
-    <Content Include="robinhood\templates\robinhood\signin.html" />
+    <Content Include="robinhood\templates\robinhood\error.html" />
+    <Content Include="robinhood\templates\robinhood\login.html" />
     <Content Include="robinhood\templates\robinhood\success.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.html">
       <SubType>WebBrowser</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Interpreter Include="env\">
-      <Id>env</Id>
-      <Version>3.6</Version>
-      <Description>env (Python 3.6 (64-bit))</Description>
-      <InterpreterPath>Scripts\python.exe</InterpreterPath>
-      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
-      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X64</Architecture>
-    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

@@ -7,6 +7,7 @@ from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
 from robinhood.models import RobinhoodUser
+from robinhood.services import RobinhoodServices
 
 def home(request):
     """Renders the home page."""
@@ -14,11 +15,13 @@ def home(request):
     try:
         request.user.robinhooduser
         has_robinhood = True
-    except RobinhoodUser.DoesNotExist as e:
+        rh_signedin = request.user.robinhooduser.signedin
+    except (RobinhoodUser.DoesNotExist, AttributeError) as e:
         has_robinhood = False
-    except AttributeError as e:
-        has_robinhood = False
+        rh_signedin = False
 
+    
+    RobinhoodServices.get_stocks(request.user)
     return render(
         request,
         'app/index.html',
@@ -26,6 +29,7 @@ def home(request):
             'title':'Home Page',
             'year':datetime.now().year,
             'has_robinhood': has_robinhood,
+            'rh_loggedin': rh_signedin,
         }
     )
 

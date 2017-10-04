@@ -400,3 +400,6 @@ __pycache__/
 
 # OpenCover UI analysis results
 OpenCover/
+*.$memlist
+*.idb
+*.sqlite3
