@@ -39,15 +39,14 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
-            {% if not has_robinhood %}
+            {% if not has_robinhood and request.user.is_authorized %}
             <li><a href="{% url 'robinhood:registration' %}">Register for Robinhood</a></li>
             {% elif has_robinhood and rh_loggedin %}
-            <!--<li><a href="" onclick="username_dropdown()">{{ request.user.robinhooduser.username }}</a></li> -->
             <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{ request.user.robinhooduser.username }} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{% url 'robinhood:logout' %}">Sign out of Robinhood</a></li>
-                    </ul>
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">{{ request.user.robinhooduser.username }} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'robinhood:logout' %}">Sign out of Robinhood</a></li>
+                </ul>
             </li>
             {% elif has_robinhood and not rh_loggedin %}
             <li><a href="{% url 'robinhood:login' %}">Sign in to Robinhood</a></li>
@@ -122,14 +121,16 @@
                 </tr>
               </thead>
               <tbody>
+                  {% for stock, info in stock_list.items %}
                 <tr>
-                  <td>AAPL</td>
-                  <td>Apple</td>
-                  <td>+1.2% ($5.88)</td>
-                  <td>+2.5% ($11.76)</td>
-                  <td>+5.0% ($23.52) </td>
+                  <td>{{ info.symbol }}</td>
+                  <td>{{ stock }}</td>
+                  <td>{{ info.day_diff }}</td>
+                  <td>{{ info.week_diff }}</td>
+                  <td>{{ info.month_diff }}</td>
                 </tr>
-                <tr>
+                  {% endfor %}
+                <!--<tr>
                   <td>1,002</td>
                   <td>amet</td>
                   <td>consectetur</td>
@@ -233,7 +234,7 @@
                   <td>ligula</td>
                   <td>in</td>
                   <td>libero</td>
-                </tr>
+                </tr>-->
               </tbody>
             </table>
           </div>
@@ -249,11 +250,6 @@
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script> 
-    <script type="text/javascript">
-        username_dropdown(){
-            
-        }
-    </script>
     <script type="text/javascript">
         var ctx = document.getElementById("myChart");
         var myChart = new Chart(ctx, {

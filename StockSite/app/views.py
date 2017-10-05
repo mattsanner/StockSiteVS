@@ -18,10 +18,10 @@ def home(request):
         rh_signedin = request.user.robinhooduser.signedin
     except (RobinhoodUser.DoesNotExist, AttributeError) as e:
         has_robinhood = False
-        rh_signedin = False
+        rh_signedin = False   
 
-    
-    RobinhoodServices.get_stocks(request.user)
+    stockList = RobinhoodServices.get_stocks(request.user)
+
     return render(
         request,
         'app/index.html',
@@ -30,6 +30,7 @@ def home(request):
             'year':datetime.now().year,
             'has_robinhood': has_robinhood,
             'rh_loggedin': rh_signedin,
+            'stock_list': stockList,
         }
     )
 

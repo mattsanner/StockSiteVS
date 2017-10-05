@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '45a348b9-b0b5-4bb2-a179-73315a9e6285'
 
-FERNET_KEY = Fernet.generate_key()
+FERNET_KEY = b'7XcMN9FFL4vq9CmFWfJ9P9L_ZSBC6_BEA3rZTIkAeXw=' #Fernet.generate_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

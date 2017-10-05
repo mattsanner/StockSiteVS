@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
+from django.http import HttpResponseRedirect
 
 from . import forms
 from .services import RobinhoodServices
@@ -10,7 +11,7 @@ def register_or_login(request):
         if(form.is_valid()):
             try:
                 RobinhoodServices.authenticate(request.user, form.cleaned_data['username'], form.cleaned_data['password'])
-                return render(request, 'robinhood/success.html')
+                return HttpResponseRedirect(reverse('home'))
             except Exception as e:
                 return render(request, 'robinhood/error.html', {'error_message': e})
     else:
@@ -29,12 +30,7 @@ def logout(request):
             request.user.robinhooduser.signedin = False
             request.user.robinhooduser.token = b' '
             request.user.robinhooduser.save()
-            return render(request, 'app/index.html',
-                {
-                    'title':'Home Page',
-                    'has_robinhood': True,
-                    'rh_loggedin': request.user.robinhooduser.signedin,
-                })
+            return HttpResponseRedirect(reverse('home'))
         except RobinhoodUser.DoesNotExist as e:
             return render(request, 'robinhood/error.html', {'error_message': e})
 
