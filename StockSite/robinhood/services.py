@@ -79,42 +79,29 @@ class RobinhoodServices():
             position_data = RobinhoodServices.get_current_positions(user)
             stocks_info = [ ]
             i = 0
-            #for i = 0; i < position_data.items().count; i++: position_data[i], want ['instrument'] ['average_buy_price'], ['quantity']
             for i in range(0, len(position_data)):
-                instLink = position_data[i]['instrument']
-                avgBuy = position_data[i]['average_buy_price']
-                quant = position_data[i]['quantity']
-                stock_info = RobinhoodServices.get_stock_info(instLink)
+                stock_info = RobinhoodServices.get_stock_info(position_data[i]['instrument'])
                 symbol = stock_info['symbol']
-                name = stock_info['simple_name']
-                fundLink = stock_info['fundamentals']
-                type= stock_info['type']
-                openPrices = RobinhoodServices.get_price_movement_table_info(symbol)
+                openPrices = RobinhoodServices.get_open_prices(symbol)
                 stock = {
-                            "name": name,
+                            "name": stock_info['simple_name'],
                             "symbol": symbol,
-                            "type": type,
-                            "averageBuyPrice": avgBuy,
-                            "quantity": quant,
-                            "instrumentLink": instLink,
-                            "fundamentalsLink": fundLink,
-                            "quotesLink": (RobinhoodServices.endpoints['quotes'] + symbol),
+                            "type": stock_info['type'], #May not be necessary to include
+                            "average_buy_Price": position_data[i]['average_buy_price'],
+                            "quantity": position_data[i]['quantity'],
+                            "instrument_link": position_data[i]['instrument'],
+                            "fundamentals_link": stock_info['fundamentals'],
+                            "quotes_link": (RobinhoodServices.endpoints['quotes'] + symbol + '/'),
                             "day_open_price": openPrices['day_open_price'],
                             "week_open_price": openPrices['week_open_price'], 
                             "month_open_price": openPrices['month_open_price'],
                         }
-                stock = RobinhoodServices.get_price_difference_info(stock)
+                #stock = RobinhoodServices.get_price_difference_info(stock)
                 stocks_info.append(stock)
                 i = i+1
             return stocks_info
         except Exception as e:
             return e
-
-    #Get stock info based on stock's URL
-    def get_stock_info(stock_url):
-        r = requests.get(stock_url)
-        data = r.json()
-        return data
 
     #Filters full list of positions down to only those currently held
     def filter_to_current_positions(positions_data):
@@ -126,6 +113,16 @@ class RobinhoodServices():
                 i = i + 1                    
         return currentPositions
 
+    #Get stock info based on stock's URL
+    def get_stock_info(stock_url):
+        r = requests.get(stock_url)
+        data = r.json()
+        return data
+
+    #Get historical data for a stock (looked up by ticker)
+    #interval: time between data points
+    #span: time frame of prices
+    #bounds: time of close for trading days (regular, extended)
     def get_historical_data(ticker, interval, span, bounds):
         apiUrl = RobinhoodServices.endpoints['historical_data'] + ticker + '/'
         params = {"interval": interval, "span": span, "bounds": bounds }
@@ -138,8 +135,9 @@ class RobinhoodServices():
         cutData = data['historicals'][(length-30):length]
         return cutData
         
-    #TODO Find way to conveniently calculate price differences between start of day, 5 day, 1 month
-    def get_price_movement_table_info(ticker):
+    #TODO: Could be refactored into individual calls for day, week, month
+    #TODO: Improve accuracy of monthly call
+    def get_open_prices(ticker):
         prices = {}
         dataDay = RobinhoodServices.get_historical_data(ticker, "5minute", "day", "regular")['historicals'][0]
         dataWeek = RobinhoodServices.get_historical_data(ticker, "10minute", "week", "regular")['historicals'][0]
@@ -148,7 +146,7 @@ class RobinhoodServices():
         dataMonth = dataMonth['historicals'][length-31]
         return {"day_open_price": dataDay['open_price'], "week_open_price": dataWeek['open_price'], "month_open_price": dataMonth['open_price'] } 
 
-    #TODO Will need refactoring
+    #TODO MOVING TO JS FILE
     def get_price_difference_info(stock):
         currentPrice = Decimal(RobinhoodServices.get_last_trade_price(stock['symbol']))
         dayDiff = currentPrice - Decimal(stock['day_open_price'])

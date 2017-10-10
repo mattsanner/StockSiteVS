@@ -23,8 +23,8 @@
 
     <script src="{% static "app/scripts/stockhelper.js"%}"></script>
     <script type="text/javascript">
-        var newVar = {{ stock_json|safe }};
-        getUpdatedStockInfo(newVar);
+        var stocks = {{ stock_json|safe }};
+        updateStockInfo(stocks);
     </script>
   </head>
 
@@ -101,9 +101,9 @@
             </div>
           </div>
 
-          <h2 class="sub-header">Your Stocks</h2>
+          <h2 class="sub-header">Your Stocks</h2><span class="glyphicon glyphicon-refresh" onclick="updateStockInfo(stocks)"></span>
           <div class="table-responsive">
-            <table class="table table-striped" id="portfolioStocks">
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <th>Ticker</th>
@@ -114,9 +114,9 @@
                   <th>1 Month</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="portfolioStocks">
                   {% for stock in stock_list %}
-                <tr>
+                <tr name="{{stock.symbol}}">
                   <td>{{ stock.symbol }}</td>
                   <td>{{ stock.name }}</td>
                   <td>{{ stock.current_price }}</td>
