@@ -77,7 +77,7 @@ class RobinhoodServices():
     def get_stocks(user):
         try:
             position_data = RobinhoodServices.get_current_positions(user)
-            stocks_info = { }
+            stocks_info = [ ]
             i = 0
             #for i = 0; i < position_data.items().count; i++: position_data[i], want ['instrument'] ['average_buy_price'], ['quantity']
             for i in range(0, len(position_data)):
@@ -91,18 +91,20 @@ class RobinhoodServices():
                 type= stock_info['type']
                 openPrices = RobinhoodServices.get_price_movement_table_info(symbol)
                 stock = {
+                            "name": name,
                             "symbol": symbol,
                             "type": type,
                             "averageBuyPrice": avgBuy,
                             "quantity": quant,
                             "instrumentLink": instLink,
                             "fundamentalsLink": fundLink,
+                            "quotesLink": (RobinhoodServices.endpoints['quotes'] + symbol),
                             "day_open_price": openPrices['day_open_price'],
                             "week_open_price": openPrices['week_open_price'], 
                             "month_open_price": openPrices['month_open_price'],
                         }
                 stock = RobinhoodServices.get_price_difference_info(stock)
-                stocks_info.update({name: stock})
+                stocks_info.append(stock)
                 i = i+1
             return stocks_info
         except Exception as e:

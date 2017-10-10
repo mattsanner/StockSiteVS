@@ -8,6 +8,10 @@ from django.template import RequestContext
 from datetime import datetime
 from robinhood.models import RobinhoodUser
 from robinhood.services import RobinhoodServices
+from app.util import json_encode_decimal
+
+import json
+
 
 def home(request):
     """Renders the home page."""
@@ -31,6 +35,7 @@ def home(request):
             'has_robinhood': has_robinhood,
             'rh_loggedin': rh_signedin,
             'stock_list': stockList,
+            'stock_json': json.dumps(stockList, default=json_encode_decimal),
         }
     )
 
