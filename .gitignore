@@ -404,3 +404,8 @@ OpenCover/
 *.$memlist
 *.idb
 *.sqlite3
+API Layouts/Fundamentals.json
+API Layouts/Instruments.json
+API Layouts/Quotes.json
+StockSite/db.sqlite3
+StockSite/db.sqlite3

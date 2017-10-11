@@ -20,7 +20,6 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static "app/content/dashboard.css" %}" rel="stylesheet"> 
-    <link href="{% static "app/content/datatable.css" %}" rel="stylesheet"> 
     <script src="{% static "app/scripts/stockhelper.js" %}"></script>
     <script type="text/javascript">
         var stocks = {{ stock_json|safe }};
@@ -140,11 +139,6 @@
     <script src="{% static "app/scripts/bootstrap.min.js" %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#portfolioTable').DataTable();
-        } );
-    </script>
     <script type="text/javascript">
         var ctx = document.getElementById("myChart");
         var myChart = new Chart(ctx, {
