@@ -96,7 +96,6 @@ class RobinhoodServices():
                             "week_open_price": openPrices['week_open_price'], 
                             "month_open_price": openPrices['month_open_price'],
                         }
-                #stock = RobinhoodServices.get_price_difference_info(stock)
                 stocks_info.append(stock)
                 i = i+1
             return stocks_info
@@ -129,6 +128,7 @@ class RobinhoodServices():
         r = requests.get(apiUrl, params)
         return r.json()
 
+    #TODO: Get accurate month data, may be more complex and necessary 
     def get_historical_month_data(ticker):
         data = RobinhoodServices.get_historical_data(ticker, "day", "year", "regular")
         length = len(data['historicals'])
@@ -146,19 +146,6 @@ class RobinhoodServices():
         dataMonth = dataMonth['historicals'][length-31]
         return {"day_open_price": dataDay['open_price'], "week_open_price": dataWeek['open_price'], "month_open_price": dataMonth['open_price'] } 
 
-    #TODO MOVING TO JS FILE
-    def get_price_difference_info(stock):
-        currentPrice = Decimal(RobinhoodServices.get_last_trade_price(stock['symbol']))
-        dayDiff = currentPrice - Decimal(stock['day_open_price'])
-        weekDiff = currentPrice - Decimal(stock['week_open_price'])
-        monthDiff = currentPrice - Decimal(stock['month_open_price'])
-        stock.update({"current_price": currentPrice, "day_diff": dayDiff, "week_diff": weekDiff, "month_diff": monthDiff})
-        return stock
-
-    def get_last_trade_price(ticker):
-        r = requests.get(RobinhoodServices.endpoints['quotes'] + ticker + '/')
-        return r.json()['last_trade_price']
-
     #TODO: Replace hardcoded URLs with references to this list
     endpoints = {
             "login": "https://api.robinhood.com/api-token-auth/",
@@ -166,3 +153,21 @@ class RobinhoodServices():
             "historical_data": "https://api.robinhood.com/quotes/historicals/",
             "quotes": "https://api.robinhood.com/quotes/",
         }
+
+
+    #Graveyard:
+        
+    """ #TODO MOVING TO JS FILE
+    def get_price_difference_info(stock):
+        currentPrice = Decimal(RobinhoodServices.get_last_trade_price(stock['symbol']))
+        dayDiff = currentPrice - Decimal(stock['day_open_price'])
+        weekDiff = currentPrice - Decimal(stock['week_open_price'])
+        monthDiff = currentPrice - Decimal(stock['month_open_price'])
+        stock.update({"current_price": currentPrice, "day_diff": dayDiff, "week_diff": weekDiff, "month_diff": monthDiff})
+        return stock
+        
+    def get_last_trade_price(ticker):
+        r = requests.get(RobinhoodServices.endpoints['quotes'] + ticker + '/')
+        return r.json()['last_trade_price']
+        
+        """

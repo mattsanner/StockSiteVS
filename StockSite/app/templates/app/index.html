@@ -19,12 +19,12 @@
     <link href="{% static "content/bootstrap.min.css" %}" rel="stylesheet">-->
 
     <!-- Custom styles for this template -->
-    <link href="{% static "app/content/dashboard.css"%}" rel="stylesheet"> 
-
-    <script src="{% static "app/scripts/stockhelper.js"%}"></script>
+    <link href="{% static "app/content/dashboard.css" %}" rel="stylesheet"> 
+    <link href="{% static "app/content/datatable.css" %}" rel="stylesheet"> 
+    <script src="{% static "app/scripts/stockhelper.js" %}"></script>
     <script type="text/javascript">
         var stocks = {{ stock_json|safe }};
-        updateStockInfo(stocks);
+        updateStockInfo(stocks);        
     </script>
   </head>
 
@@ -103,7 +103,7 @@
 
           <h2 class="sub-header">Your Stocks</h2><span class="glyphicon glyphicon-refresh" onclick="updateStockInfo(stocks)"></span>
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table id ="portfolioTable" class="table table-striped">
               <thead>
                 <tr>
                   <th>Ticker</th>
@@ -119,10 +119,10 @@
                 <tr name="{{stock.symbol}}">
                   <td>{{ stock.symbol }}</td>
                   <td>{{ stock.name }}</td>
-                  <td>{{ stock.current_price }}</td>
-                  <td>{% if stock.day_diff > 0 %}+{% endif %}{{ stock.day_diff }}</td>
-                  <td>{% if stock.week_diff > 0 %}+{% endif %}{{ stock.week_diff }}</td>
-                  <td>{% if stock.month_diff > 0 %}+{% endif %}{{ stock.month_diff }}</td>
+                  <td>${{ stock.current_price }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
                   {% endfor %}
               </tbody>              
@@ -139,7 +139,12 @@
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="{% static "app/scripts/bootstrap.min.js" %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#portfolioTable').DataTable();
+        } );
+    </script>
     <script type="text/javascript">
         var ctx = document.getElementById("myChart");
         var myChart = new Chart(ctx, {
