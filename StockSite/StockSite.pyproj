@@ -80,7 +80,6 @@
     <Folder Include="StockSite\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\static\app\content\datatable.css" />
     <Content Include="app\static\app\scripts\stockhelper.js" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />

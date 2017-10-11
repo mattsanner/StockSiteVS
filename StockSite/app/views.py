@@ -30,7 +30,7 @@ def home(request):
         request,
         'app/index.html',
         {
-            'title':'Home Page',
+            'title':'Stock Dashboard',
             'year':datetime.now().year,
             'has_robinhood': has_robinhood,
             'rh_loggedin': rh_signedin,

@@ -15,7 +15,6 @@ function updateStockInfo(stocks) {
     });
 }
 
-//TODO: Fix foreach loop to include correct info for writing
 function updateTableInfo(updatedInfo) {
     for (info in updatedInfo) {
         rows = document.getElementsByName(info);
@@ -29,13 +28,6 @@ function updateTableInfo(updatedInfo) {
     }
 }
 
-function calculateDifferences(current, dayOpen, weekOpen, monthOpen)
-{
-    return " \"current\": \"$" + current + "\", \"dayDiff\": " + round((current - dayOpen), 2) +
-        ", \"weekDiff\": " + round((current - weekOpen), 2) +
-        ", \"monthDiff\": " + round((current - monthOpen), 2) + " }";
-}
-
 function getCurrentPrices(stocks) {
     let length = stocks.length;
     promises = [];
@@ -45,11 +37,57 @@ function getCurrentPrices(stocks) {
             console.log(quotes_link);
             let pricePromise = fetch(quotes_link).then((response) => response.json());
             promises.push(pricePromise);
-        }        
+        }
     }
     return Promise.all(promises);
 }
 
+function getDailyHistoricData(ticker) {
+    return fetchDailyHistoricData(ticker).then((data) => {
+        xaxis = [];
+        yaxis = [];
+        startPrice = 0.0;
+        endPrice = 0.0;
+        positiveChange = false;
+        for (record in data['historicals'])
+        {
+            if (record == 0)
+            {
+                startPrice = data['historicals'][record]['open_price'];
+            }
+            else if (record == data['historicals'].length - 1)
+            {
+                endPrice = data['historicals'][record]['open_price'];
+            }
+            xaxis.push(parseISOStringTime(data['historicals'][record]['begins_at'].split('T')[1]));
+            yaxis.push(data['historicals'][record]['open_price']);
+        }
+        if (Number(startPrice) < Number(endPrice))
+        {
+            positiveChange = true;
+        }
+        return { xaxis, yaxis, positiveChange };
+    })
+}
+
+function fetchDailyHistoricData(ticker) {
+    url = "https://api.robinhood.com/quotes/historicals/" + ticker + "/?interval=5minute&span=day&bounds=trading";
+    return fetch(url).then((response => response.json()))
+}
+
+function calculateDifferences(current, dayOpen, weekOpen, monthOpen)
+{
+    return " \"current\": \"$" + current + "\", \"dayDiff\": " + round((current - dayOpen), 2) +
+        ", \"weekDiff\": " + round((current - weekOpen), 2) +
+        ", \"monthDiff\": " + round((current - monthOpen), 2) + " }";
+}
+
 function round(value, decimals) {
     return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
+
+
+function parseISOStringTime(s) {
+    var b = s.split(':');
+    return b[0] + ':' + b[1];
 }
