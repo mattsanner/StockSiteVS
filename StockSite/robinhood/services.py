@@ -154,7 +154,6 @@ class RobinhoodServices():
             "quotes": "https://api.robinhood.com/quotes/",
         }
 
-
     #Graveyard:
         
     """ #TODO MOVING TO JS FILE

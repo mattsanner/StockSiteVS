@@ -16,41 +16,48 @@
     </div>
 
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        <h1 class="page-header">Dashboard</h1>
+        <h1 class="page-header"><span>Dashboard</span><span class="pull-right glyphicon glyphicon-refresh" onclick="updateStockInfo(stocks)"></span></h1>
+        
         <div class="row">              
             <div class="col-sm-4">
-                <canvas id="myChart" ></canvas>
+                <canvas id="chart" ></canvas>
             </div>
             <div class="col-sm-4">
-                <canvas id="myChart2" ></canvas>
+                <canvas id="chart2" ></canvas>
             </div>
             <div class="col-sm-4">
-                <canvas id="myChart3" ></canvas>
+                <canvas id="chart3" ></canvas>
             </div>
         </div>
-        <h2 class="sub-header">Your Stocks</h2><span class="glyphicon glyphicon-refresh" onclick="updateStockInfo(stocks)"></span>
+        <h2 class="sub-header">Your Stocks</h2>
         <div class="table-responsive">
         <table id ="portfolioTable" class="table table-striped">
             <thead>
-            <tr>
-                <th>Ticker</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>1 Day Movement</th>
-                <th>5 Day</th>
-                <th>1 Month</th>
-            </tr>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>1 Day Movement</th>
+                    <th>5 Day</th>
+                    <th>1 Month</th>
+                    <th>Chart</th>
+                </tr>
             </thead>
             <tbody id="portfolioStocks">
                 {% for stock in stock_list %}
-            <tr name="{{stock.symbol}}">
-                <td>{{ stock.symbol }}</td>
-                <td>{{ stock.name }}</td>
-                <td>${{ stock.current_price }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+                    <tr name="{{stock.symbol}}">
+                        <td>{{ stock.symbol }}</td>
+                        <td>{{ stock.name }}</td>
+                        <td>${{ stock.current_price }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a ticker="{{stock.symbol}}" onclick="getChart(this.getAttribute('ticker'), 'chart')">1</a>
+                            <a ticker="{{stock.symbol}}" onclick="getChart(this.getAttribute('ticker'), 'chart2')">2</a>
+                            <a ticker="{{stock.symbol}}" onclick="getChart(this.getAttribute('ticker'), 'chart3')">3</a>
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>              
         </table>
@@ -60,101 +67,14 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="{% static "app/scripts/bootstrap.min.js" %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
     <script type="text/javascript">
-        var red = 'rgba(255,99,132,1)'
-        var green = 'rgba(0,196,0,1)'
-        var ctx = document.getElementById("myChart");
-        getDailyHistoricData("MU").then((chartData) => {
-            let lineColor = chartData['postiveChange'] ? green : red;
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: chartData['xaxis'],
-                    datasets: [{
-                        label: 'MU',
-                        data: chartData['yaxis'],
-                        borderColor: [
-                            lineColor,
-                        ],
-                        borderWidth: 1,
-                        pointRadius: 0,
-                        fill: false,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero:false
-                            }
-                        }]
-                    }
-                }
-            });
-        });
-        var ctx2 = document.getElementById('myChart2');
-        getDailyHistoricData("HRZN").then((chartData) => {
-            let lineColor = chartData['postiveChange'] ? green : red;
-            var myChart = new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: chartData['xaxis'],
-                    datasets: [{
-                        label: 'HRZN',
-                        data: chartData['yaxis'],
-                        borderColor: [
-                            lineColor,
-                        ],
-                        borderWidth: 1,
-                        pointRadius: 0,
-                        fill: false,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero:false
-                            }
-                        }]
-                    }
-                }
-            });
-        });
-        var ctx3 = document.getElementById('myChart3');
-        getDailyHistoricData("VOOG").then((chartData) => {
-            let lineColor = chartData['postiveChange'] ? green : red;
-            var myChart = new Chart(ctx3, {
-                type: 'line',
-                data: {
-                    labels: chartData['xaxis'],
-                    datasets: [{
-                        label: 'VOOG',
-                        data: chartData['yaxis'],
-                        borderColor: [
-                            lineColor,
-                        ],
-                        borderWidth: 1,
-                        pointRadius: 0,
-                        fill: false,
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero:false
-                            }
-                        }]
-                    }
-                }
-            });
-        });
+        var stockRows = document.getElementById('portfolioStocks').getElementsByTagName('tr');
+        getChart(stockRows[0].getElementsByTagName('td')[0].textContent, "chart");
+        getChart(stockRows[1].getElementsByTagName('td')[0].textContent, "chart2");
+        getChart(stockRows[2].getElementsByTagName('td')[0].textContent, "chart3");
     </script>      
 
 {% endblock %}

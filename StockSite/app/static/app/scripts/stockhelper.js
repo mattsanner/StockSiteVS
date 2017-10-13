@@ -13,6 +13,27 @@ function updateStockInfo(stocks) {
         json_object = JSON.parse(price_diffs);
         updateTableInfo(json_object);
     });
+
+    tickers = [];
+    charts = ['chart', 'chart2', 'chart3']
+    if (length >= 3) {
+        if (chartTicker != '') {
+            updateCurrentDashboardCharts();
+            return;
+        } else {
+            tickers = [stocks[0]['symbol'], stocks[1]['symbol'], stocks[2]['symbol']];
+        }
+    }
+    else if (length == 2) {
+        tickers = [stocks[0]['symbol'], stocks[1]['symbol'], 'NFLX'];
+    }
+    else if (length == 1) {
+        tickers = [stocks[0]['symbol'], 'AAPL', 'NFLX'];
+    }
+    else {
+        tickers = ['GOOGL', 'AAPL', 'NFLX'];
+    }
+    updateAllCharts(tickers, charts);
 }
 
 function updateTableInfo(updatedInfo) {
