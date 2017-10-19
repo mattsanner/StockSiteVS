@@ -60,7 +60,7 @@ class RobinhoodServices():
             return e
 
     #Uses user account info to get API URL for positions API
-    #Returns position user has an active stake in
+    #Returns positions user has an active stake in
     def get_current_positions(user):
         try:            
             data = RobinhoodServices.get_account_info(user)
@@ -69,6 +69,17 @@ class RobinhoodServices():
             posRequest = requests.get(positionsUrl, headers=header)
             posData = posRequest.json()['results']                 
             return RobinhoodServices.filter_to_current_positions(posData)
+        except Exception as e:
+            return e
+
+    def get_user_stock_info(user, ticker):
+        try:
+            currentPos = RobinhoodServices.get_current_positions(user)            
+            for i in range(0, len(currentPos)):
+                stock = RobinhoodServices.get_stock_info(currentPos[i]['instrument'])
+                if(stock['symbol'] == ticker):
+                    return [ stock, currentPos[i] ]
+            return [ ]
         except Exception as e:
             return e
 

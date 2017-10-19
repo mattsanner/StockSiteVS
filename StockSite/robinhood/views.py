@@ -34,28 +34,3 @@ def logout(request):
         except RobinhoodUser.DoesNotExist as e:
             return render(request, 'robinhood/error.html', {'error_message': e})
 
-#def registration(request):
-#    if(request.user.is_authenticated and request.method == 'POST'):
-#        form = forms.RobinhoodRegistrationForm(request.POST)
-#        if(form.is_valid()):
-#            try:
-#                RobinhoodServices.authenticate(request.user, form.cleaned_data['username'], form.cleaned_data['password'])
-#                return render(request, 'robinhood/success.html')
-#            except Exception as e:
-#                return render(request, 'robinhood/registration_error.html', {'error_message': e})
-#    else:
-#        form = forms.RobinhoodRegistrationForm()
-    
-    
-
-#def robinhoodlogin(request):
-#    if request.user.is_authenticated and request.method == 'POST':
-#        form = forms.RobinhoodRegistrationForm(request.POST)
-#        if(form.is_valid()):
-#            try:
-#                RobinhoodServices.authenticate(request.user, form.cleaned_data['username'], form.cleaned_data['password'])
-#                return HttpResponseRedirect(template.Render())
-#            except Exception as e:
-#                return render(request, 'robinhood/login.html', {'title': 'Password or username was incorrect, try again', 'form': form})
-#        else:
-#            form = forms.RobinhoodRegistrationForm()

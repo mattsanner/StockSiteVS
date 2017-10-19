@@ -45,6 +45,20 @@ def home(request):
     else:
         return redirect('login');
 
+#Need to add authentication checks, pass in RH user, etc.
+def stock(request, stock):
+    assert isinstance(request, HttpRequest)
+    stockContext = RobinhoodServices.get_user_stock_info(request.user, stock.upper())
+    return render(
+        request,
+        'app/stock.html',
+        {
+            'title': 'Stock Dashboard',
+            'stock_info': stockContext[0],
+            'user_stake': stockContext[1],
+        }
+    )
+
 def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)

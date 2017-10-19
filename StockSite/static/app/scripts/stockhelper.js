@@ -1,3 +1,4 @@
+//Needs separation of concerns work
 function updateStockInfo(stocks) {
     let price_diffs = "{ ";
     let length = stocks.length;
@@ -91,9 +92,35 @@ function getDailyHistoricData(ticker) {
     })
 }
 
+function updateStockFundamentals(ticker) {
+    fetchStockFundamentals(ticker).then((data) => {
+        document.getElementById('volume').textContent = "Volume: " + stringifyBigNumber(Number(data['volume']));
+        document.getElementById('PE').textContent = "P/E Ratio: " + round(Number(data['pe_ratio']), 3);
+        document.getElementById('52High').textContent = "52 Week High: $" + round(Number(data['high_52_weeks']), 2);
+        document.getElementById('52Low').textContent = "52 Week Low: $" + round(Number(data['low_52_weeks']), 2);
+    })
+}
+
+function updateStockPrice(ticker) {
+    fetchStockPrice(ticker).then((data) => {
+        document.getElementById('stock_price').textContent = round(Number(data['last_trade_price']), 2);
+    }) 
+}
+
+//Could refactor fetch methods into one method
+function fetchStockFundamentals(ticker) {
+    url = "https://api.robinhood.com/fundamentals/" + ticker + '/';
+    return fetch(url).then(response => response.json());
+}
+
+function fetchStockPrice(ticker) {
+    url = "https://api.robinhood.com/quotes/" + ticker + '/';
+    return fetch(url).then(response => response.json());
+}
+
 function fetchDailyHistoricData(ticker) {
     url = "https://api.robinhood.com/quotes/historicals/" + ticker + "/?interval=5minute&span=day&bounds=trading";
-    return fetch(url).then((response => response.json()))
+    return fetch(url).then((response => response.json()));
 }
 
 function calculateDifferences(current, dayOpen, weekOpen, monthOpen)
@@ -107,6 +134,19 @@ function round(value, decimals) {
     return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
+function stringifyBigNumber(value) {
+    if (value >= 1000000) {
+        value = round( (value / 1000000), 3);
+        return value + "mil";
+    } else if (value >= 10000)
+    {
+        value = round((value / 1000), 3)
+        return value + "k";
+    } else
+    {
+        return value;
+    }
+}
 
 function parseISOStringTime(s) {
     var b = s.split(':');

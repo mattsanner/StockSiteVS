@@ -40,8 +40,5 @@ urlpatterns = [
         name='logout'),
     url(r'^admin/', admin.site.urls),
     url(r'^robinhood/', include('robinhood.urls', namespace='robinhood'), name='robinhood'),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
+    url(r'^stock/(?P<stock>[a-zA-Z ]+)/', app.views.stock, name='single_stock'),
 ]

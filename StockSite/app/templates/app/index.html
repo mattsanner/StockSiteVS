@@ -1,20 +1,13 @@
 ﻿{% extends "app/layout.html" %}
 {% load static %}
 {% block content %}
-    <div class="col-sm-3 col-md-2 sidebar">
-        <ul class="nav nav-sidebar">
-        <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Portfolio</a></li>
-        <li><a href="#">History</a></li>
-        <li><a href="#">Export</a></li>
-        </ul>
-        <ul class="nav nav-sidebar">
-        <li><a href="">News</a></li>
-        <li><a href="">Top Gainers</a></li>
-        <li><a href="">Top Losers</a></li>
-        </ul>
-    </div>
-
+<head>
+    <script type="text/javascript">
+    var stocks = {{ stock_json|safe }};
+    updateStockInfo(stocks);        
+    </script>
+</head>
+<body>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <h1 class="page-header"><span>Dashboard</span><span class="pull-right glyphicon glyphicon-refresh" onclick="updateStockInfo(stocks)"></span></h1>
         
@@ -46,7 +39,7 @@
             <tbody id="portfolioStocks">
                 {% for stock in stock_list %}
                     <tr name="{{stock.symbol}}">
-                        <td>{{ stock.symbol }}</td>
+                        <td><a href="{% url 'single_stock' stock=stock.symbol %}">{{ stock.symbol }}</a></td>
                         <td>{{ stock.name }}</td>
                         <td>${{ stock.current_price }}</td>
                         <td></td>
@@ -63,6 +56,7 @@
         </table>
         </div>
     </div>
+</body>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
