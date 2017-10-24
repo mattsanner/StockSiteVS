@@ -38,6 +38,8 @@ urlpatterns = [
             'next_page': '/',
         },
         name='logout'),
+    url(r'^register/$',
+        app.views.create_user, { }, name='register'),
     url(r'^admin/', admin.site.urls),
     url(r'^robinhood/', include('robinhood.urls', namespace='robinhood'), name='robinhood'),
     url(r'^stock/(?P<stock>[a-zA-Z ]+)/', app.views.stock, name='single_stock'),

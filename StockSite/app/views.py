@@ -2,16 +2,17 @@
 Definition of views.
 """
 
-from django.shortcuts import render, redirect
-from django.http import HttpRequest
-from django.template import RequestContext
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpRequest, HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.core.validators import validate_email, ValidationError
 from datetime import datetime
 from robinhood.models import RobinhoodUser
 from robinhood.services import RobinhoodServices
 from app.util import json_encode_decimal
 
+from . import forms
 import json
-
 
 def home(request):
     """Renders the home page."""
@@ -58,6 +59,26 @@ def stock(request, stock):
             'user_stake': stockContext[1],
         }
     )
+
+def create_user(request):
+    if(request.method == 'POST'):
+        form = forms.RegistrationForm(request.POST)
+        if(form.is_valid() and form.cleaned_data['password1'] == form.cleaned_data['password2']):
+            try:
+                validate_email(form.cleaned_data['email']);
+                user = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password1'])
+                user.first_name = form.cleaned_data['firstName']
+                user.save()
+                return HttpResponseRedirect(reverse('login'))
+            except ValidationError as e:                
+                return render(request, 'app/user_registration.html', {'title': 'Enter a valid email address', 'form': forms.RegistrationForm()})
+            except Exception as e:
+                return render(request, 'app/user_registration.html', {'title': 'There was an error processing your submission. Try again.', 'form': forms.RegistrationForm()})
+        else:
+            return render(request, 'app/error.html', {'error': 'Form data was not valid and/or passwords did not match' })
+    else:
+        form = forms.RegistrationForm()
+        return render(request, 'app/user_registration.html', {'title': 'Create a User', 'form': form})
 
 def contact(request):
     """Renders the contact page."""

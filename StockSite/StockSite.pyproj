@@ -83,7 +83,9 @@
     <Content Include="app\static\app\content\dashboard.css" />
     <Content Include="app\static\app\scripts\charthelper.js" />
     <Content Include="app\static\app\scripts\stockhelper.js" />
+    <Content Include="app\templates\app\error.html" />
     <Content Include="app\templates\app\stock.html" />
+    <Content Include="app\templates\app\user_registration.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />
