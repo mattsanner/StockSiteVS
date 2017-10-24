@@ -46,7 +46,7 @@ class RobinhoodServices():
                 user.robinhooduser.signedin = True
                 user.robinhooduser.save()
         except RobinhoodUser.DoesNotExist as e:
-            register(user, username, password)
+            RobinhoodServices.register(user, username, password)
         except Exception as e:
             return e
 

@@ -14,6 +14,7 @@ from app.util import json_encode_decimal
 from . import forms
 import json
 
+#TODO: User created in create_user is not given a robinhood account option in the navbar, why.
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest) 
@@ -60,6 +61,7 @@ def stock(request, stock):
         }
     )
 
+#TODO: The user created in this method is not able to sign in w/ robinhood, the toolbar button won't appear for them after signing in.
 def create_user(request):
     if(request.method == 'POST'):
         form = forms.RegistrationForm(request.POST)
@@ -68,7 +70,7 @@ def create_user(request):
                 validate_email(form.cleaned_data['email']);
                 user = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['password1'])
                 user.first_name = form.cleaned_data['firstName']
-                user.save()
+                user.save()                
                 return HttpResponseRedirect(reverse('login'))
             except ValidationError as e:                
                 return render(request, 'app/user_registration.html', {'title': 'Enter a valid email address', 'form': forms.RegistrationForm()})

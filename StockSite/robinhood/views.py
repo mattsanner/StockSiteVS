@@ -21,6 +21,8 @@ def register_or_login(request):
             return render(request, 'robinhood/login.html', {'title': 'Log in to your Robinhood Account.', 'form': form})
         except RobinhoodUser.DoesNotExist as e:
             return render(request, 'robinhood/login.html', {'title': 'Log in to Robinhood to link your accounts.', 'form': form})
+        except AttributeError as e:
+            return render(request, 'robinhood/login.html', {'title': 'Log in to Robinhood to link your accounts.', 'form': form})
         except Exception as e:
             return render(request, 'robinhood/error.html', {'error_message': e})
 

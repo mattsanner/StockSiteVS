@@ -115,7 +115,6 @@
     <Content Include="app\templates\app\index.html" />
     <Content Include="app\templates\app\layout.html" />
     <Content Include="app\templates\app\login.html" />
-    <Content Include="app\templates\app\loginpartial.html" />
     <Content Include="robinhood\templates\index.html" />
     <Content Include="robinhood\templates\robinhood\error.html" />
     <Content Include="robinhood\templates\robinhood\login.html" />
